@@ -1,0 +1,11 @@
+fast_bitrix24
+fastapi[standard]
+python-dotenv
+dadata
+sqlalchemy
+pyodbc
+pytest
+requests
+loguru
+pydantic
+pydantic-settings
