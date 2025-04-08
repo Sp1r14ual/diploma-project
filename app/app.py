@@ -8,6 +8,7 @@ import json
 
 app = FastAPI()
 
+
 app.include_router(crm_contact_router)
 app.include_router(catalog_product_router)
 
