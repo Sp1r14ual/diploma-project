@@ -4,9 +4,9 @@ from pydantic import BaseModel
 class ContactSchema(BaseModel):
     family_name: str
     name: str
-    patronimic_name: str
+    patronimic_name: str | None = None
     birthdate: str | None = None
-    phone_number: str
+    phone_number: str | None = None
     email: str | None = None
     pasport_serial: str | None = None
     pasport_number: str | None = None

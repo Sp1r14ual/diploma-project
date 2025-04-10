@@ -2,7 +2,8 @@ from app.bitrix.get_catalog_product import get_catalog_product_by_id
 from fastapi import APIRouter
 
 router = APIRouter(
-    prefix="/bitrix/catalog/product"
+    prefix="/bitrix/catalog/product",
+    tags=["Bitrix_Catalog_Product"]
 )
 
 # Сделать post с передачей параметров

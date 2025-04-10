@@ -12,10 +12,10 @@ load_dotenv(os.path.join(BASEDIR, '.env'), override=True)
 
 
 class Settings(BaseSettings):
-    HOST: str = os.getenv("HOST") or "0.0.0.0"
-    PORT: int = os.getenv("PORT") or 5000
+    # HOST: str = os.getenv("HOST") or "0.0.0.0"
+    # PORT: int = os.getenv("PORT") or 5000
 
-    DEBUG: bool = False if not os.getenv("FLASK_DEBUG") else True
+    # DEBUG: bool = False if not os.getenv("FLASK_DEBUG") else True
 
     # JWT_SECRET_KEY: str = os.getenv("JWT_SECRET_KEY") or str(
     #     secrets.SystemRandom().getrandbits(128))

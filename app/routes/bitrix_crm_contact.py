@@ -5,7 +5,7 @@ from fastapi import APIRouter
 
 router = APIRouter(
     prefix="/bitrix/contact",
-    tags=["Contact"]
+    tags=["Bitrix_CRM_Contact"]
 )
 
 # Сделать post с передачей параметров
@@ -29,6 +29,18 @@ async def bitrix_create_contact(ContactSchema: ContactSchema):
 # сделать фильтрацию по параметрам через post метод
 
 
-@router.get("/get")
-async def bitrix_get_contacts():
-    return await get_crm_contacts()
+@router.post("/get")
+async def bitrix_get_contacts(ContactSchema: ContactSchema):
+    received = {
+        "LAST_NAME": ContactSchema.family_name,
+        "NAME": ContactSchema.name,
+        "SECOND_NAME": ContactSchema.patronimic_name,
+        "BIRTHDATE": ContactSchema.birthdate,
+        "EMAIL": ContactSchema.email,
+        "PHONE": ContactSchema.phone_number,
+        "ADDRESS": ContactSchema.reg_adress
+    }
+
+    params = {k: v for k, v in received.items() if v is not None}
+
+    return await get_crm_contacts(filter_params=params)
