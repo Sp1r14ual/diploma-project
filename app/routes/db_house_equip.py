@@ -1,7 +1,8 @@
 from app.db.house_equip.house_equip_insert import insert_in_HouseEquip
 from app.db.house_equip.house_equip_update import update_in_HouseEquip
 from app.db.house_equip.house_equip_delete import delete_from_HouseEquip
-from app.schemas.house_equip_schema import AddHouseEquipSchemaForPerson, AddHouseEquipSchemaForOrganization, EditHouseEquipSchema, DeleteHouseEquipSchema
+from app.db.house_equip.get_all_house_equip import select_all_from_house_equip_by_id
+from app.schemas.house_equip_schema import AddHouseEquipSchemaForPerson, AddHouseEquipSchemaForOrganization, EditHouseEquipSchema, DeleteHouseEquipSchema, GetAllHouseEquipSchema
 from app.logger import logger
 from fastapi import APIRouter, HTTPException
 
@@ -51,3 +52,16 @@ async def db_delete_house_equip(DeleteHouseEquipSchema: DeleteHouseEquipSchema) 
     logger.info(f"Delete From HouseEquip: Success")
 
     return {'Result': 'Deleted'}
+
+
+@router.post('/get_all_house_equip', status_code=200)
+async def db_get_all_house_equip_by_house_id(GetAllHouseEquipSchema: GetAllHouseEquipSchema):
+    result = select_all_from_house_equip_by_id(**GetAllHouseEquipSchema.dict())
+
+    if isinstance(result, str) and result.startswith("Error"):
+        logger.error(f"Select From House Equip: {result}")
+        raise HTTPException(status_code=400, detail=result)
+
+    logger.info(f"Select From House Equip: Success")
+
+    return result

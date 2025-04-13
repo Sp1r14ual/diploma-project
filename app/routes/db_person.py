@@ -1,6 +1,7 @@
 from app.db.person.person_insert import insert_in_Person
 from app.db.person.person_update import update_in_Person
 from app.db.person.person_delete import delete_from_Person
+from app.db.person.get_all_people import select_all_from_person
 from app.schemas.person_schema import AddPersonSchema, EditPersonSchema, DeletePersonSchema
 from fastapi import APIRouter, HTTPException
 from app.logger import logger
@@ -35,7 +36,7 @@ async def db_update_person(EditPersonSchema: EditPersonSchema):
 
 
 @router.delete("/delete", status_code=200)
-async def delete(DeletePersonSchema: DeletePersonSchema):
+async def db_delete_person(DeletePersonSchema: DeletePersonSchema):
     result = delete_from_Person(**DeletePersonSchema.dict())
     if isinstance(result, str) and result.startswith("Error"):
         logger.error(f"Delete From Person: {result}")
@@ -44,3 +45,16 @@ async def delete(DeletePersonSchema: DeletePersonSchema):
     logger.info(f"Delete From Person: Success")
 
     return {"Result": "Deleted"}
+
+
+@router.get("/get_all_people", status_code=200)
+async def db_get_all_people():
+    result = select_all_from_person()
+
+    if isinstance(result, str) and result.startswith("Error"):
+        logger.error(f"Select From Person: {result}")
+        raise HTTPException(status_code=400, detail=result)
+
+    logger.info(f"Select From Person: Success")
+
+    return result

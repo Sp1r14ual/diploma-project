@@ -33,3 +33,11 @@ class EditHouseSchemaForOrganization(BaseModel):
 
 class DeleteHouseSchema(BaseModel):
     id_house: int
+
+
+class GetAllHousesSchemaForPerson(BaseModel):
+    id_client: int
+
+
+class GetAllHousesSchemaForOrganization(BaseModel):
+    id_organization: int

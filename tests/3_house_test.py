@@ -6,7 +6,7 @@ from app.settings import settings
 URL = 'http://127.0.0.1:8000/db/house'
 ITEM_ID = None
 
-IS_ACTIVE = True
+IS_ACTIVE = False
 
 
 @pytest.mark.skipif(not (IS_ACTIVE and all((settings.DADATA_TOKEN, settings.DADATA_SECRET))), reason="prevent using dadata api")

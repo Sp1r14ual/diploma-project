@@ -28,3 +28,7 @@ class EditHouseEquipSchema(BaseModel):
 class DeleteHouseEquipSchema(BaseModel):
     id_house_equip: int
     id_house: int
+
+
+class GetAllHouseEquipSchema(BaseModel):
+    id_house: int

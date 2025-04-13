@@ -5,7 +5,8 @@ from app.settings import settings
 from app.db.house.house_insert import insert_in_House
 from app.db.house.house_update import update_in_House
 from app.db.house.house_delete import delete_from_House
-from app.schemas.house_schema import AddHouseSchemaForPerson, AddHouseSchemaForOrganization, EditHouseSchemaForPerson, EditHouseSchemaForOrganization, DeleteHouseSchema
+from app.db.house.get_all_houses import select_all_from_house_by_id
+from app.schemas.house_schema import AddHouseSchemaForPerson, AddHouseSchemaForOrganization, EditHouseSchemaForPerson, EditHouseSchemaForOrganization, DeleteHouseSchema, GetAllHousesSchemaForPerson, GetAllHousesSchemaForOrganization
 
 router = APIRouter(
     prefix="/db/house",
@@ -154,3 +155,25 @@ async def db_delete_house(DeleteHouseSchema: DeleteHouseSchema) -> dict:
     logger.info(f"Delete From House: Success")
 
     return {'Result': 'Deleted'}
+
+
+def process_get_all_houses(data):
+    result = select_all_from_house_by_id(**data)
+
+    if isinstance(result, str) and result.startswith("Error"):
+        logger.error(f"Select From House: {result}")
+        raise HTTPException(status_code=400, detail=result)
+
+    logger.info(f"Select From House: Success")
+
+    return result
+
+
+@router.post("/get_all_houses/for_person", status_code=200)
+async def db_get_all_houses_by_id_for_person(GetAllHousesSchemaForPerson: GetAllHousesSchemaForPerson):
+    return process_get_all_houses(GetAllHousesSchemaForPerson.dict())
+
+
+@router.post("/get_all_houses/for_organization", status_code=200)
+async def db_get_all_houses_by_id_for_organization(GetAllHousesSchemaForOrganization: GetAllHousesSchemaForOrganization):
+    return process_get_all_houses(GetAllHousesSchemaForOrganization.dict())

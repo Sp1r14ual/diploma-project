@@ -1,6 +1,7 @@
 from app.db.organization.organization_insert import insert_in_Organization
 from app.db.organization.organization_update import update_in_Organization
 from app.db.organization.organization_delete import delete_from_Organization
+from app.db.organization.get_all_organizations import select_all_from_organization
 from app.schemas.organization_schema import AddOrganizationSchema, EditOrganizationSchema, DeleteOrganizationSchema
 from app.logger import logger
 from fastapi import APIRouter, HTTPException
@@ -42,3 +43,16 @@ async def db_delete_organization(DeleteOrganizationSchema: DeleteOrganizationSch
     logger.info(f"Delete From Organization: Success")
 
     return {"Result": "Deleted"}
+
+
+@router.get('/get_all_organizations', status_code=200)
+async def db_get_all_organizations():
+    result = select_all_from_organization()
+
+    if isinstance(result, str) and result.startswith("Error"):
+        logger.error(f"Select From Organization: {result}")
+        raise HTTPException(status_code=400, detail=result)
+
+    logger.info(f"Select From Organization: Success")
+
+    return result
