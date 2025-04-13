@@ -30,8 +30,13 @@ async def db_create_house_for_person(AddHouseSchemaForPerson: AddHouseSchemaForP
     parsed_data = dict()
 
     with Dadata(settings.DADATA_TOKEN, settings.DADATA_SECRET) as dd:
-        parsed_address = dd.clean(
-            "address", AddHouseSchemaForPerson.dict()["adress"])
+        try:
+            parsed_address = dd.clean(
+                "address", AddHouseSchemaForPerson.dict()["adress"])
+        except:
+            raise HTTPException(
+                status_code=403, detail="DaData is out of credits")
+
         parsed_data["town"] = parsed_address["city"]
         parsed_data["district"] = parsed_address["city_district"]
         parsed_data["street"] = parsed_address["street"]
@@ -61,8 +66,13 @@ async def db_create_house_for_organization(AddHouseSchemaForOrganization: AddHou
     parsed_data = dict()
 
     with Dadata(settings.DADATA_TOKEN, settings.DADATA_SECRET) as dd:
-        parsed_address = dd.clean(
-            "address", AddHouseSchemaForOrganization.dict()["adress"])
+        try:
+            parsed_address = dd.clean(
+                "address", AddHouseSchemaForOrganization.dict()["adress"])
+        except:
+            raise HTTPException(
+                status_code=403, detail="DaData is out of credits")
+
         parsed_data["town"] = parsed_address["city"]
         parsed_data["district"] = parsed_address["city_district"]
         parsed_data["street"] = parsed_address["street"]
@@ -92,8 +102,12 @@ async def db_update_house_for_person(EditHouseSchemaForPerson: EditHouseSchemaFo
     parsed_data = dict()
 
     with Dadata(settings.DADATA_TOKEN, settings.DADATA_SECRET) as dd:
-        parsed_address = dd.clean(
-            "address", EditHouseSchemaForPerson.dict()["adress"])
+        try:
+            parsed_address = dd.clean(
+                "address", EditHouseSchemaForPerson.dict()["adress"])
+        except:
+            raise HTTPException(
+                status_code=403, detail="DaData is out of credits")
         parsed_data["town"] = parsed_address["city"]
         parsed_data["district"] = parsed_address["city_district"]
         parsed_data["street"] = parsed_address["street"]
@@ -121,8 +135,13 @@ async def db_update_house_for_organization(EditHouseSchemaForOrganization: EditH
     parsed_data = dict()
 
     with Dadata(settings.DADATA_TOKEN, settings.DADATA_SECRET) as dd:
-        parsed_address = dd.clean(
-            "address", EditHouseSchemaForOrganization.dict()["adress"])
+        try:
+            parsed_address = dd.clean(
+                "address", EditHouseSchemaForOrganization.dict()["adress"])
+        except:
+            raise HTTPException(
+                status_code=403, detail="DaData is out of credits")
+
         parsed_data["town"] = parsed_address["city"]
         parsed_data["district"] = parsed_address["city_district"]
         parsed_data["street"] = parsed_address["street"]

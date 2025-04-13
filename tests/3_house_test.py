@@ -18,6 +18,10 @@ def test_insert_in_house_for_person():
 
     response = requests.post(URL + '/insert/for_person', json=data_to_send)
 
+    if response.status_code == 403:
+        assert False, "DaData profile ran out of credits"
+        raise
+
     response_json = response.json()
 
     assert response.status_code == 201, response_json
@@ -33,6 +37,9 @@ def test_update_in_house_for_person():
                     'cadastr_number': '123223223', 'id_client': 46831, 'is_actual': 1}
 
     response = requests.put(URL + '/update/for_person', json=data_to_send)
+
+    if response.status_code == 403:
+        assert False, "DaData profile ran out of credits"
 
     assert response.status_code == 200, response.json()
 
@@ -56,6 +63,9 @@ def test_insert_in_house_for_organization():
     response = requests.post(
         URL + '/insert/for_organization', json=data_to_send)
 
+    if response.status_code == 403:
+        assert False, "DaData profile ran out of credits"
+
     response_json = response.json()
     ITEM_ID = response_json["id_house"]
 
@@ -70,6 +80,9 @@ def test_update_in_house_for_organization():
 
     response = requests.put(
         URL + '/update/for_organization', json=data_to_send)
+
+    if response.status_code == 403:
+        assert False, "DaData profile ran out of credits"
 
     assert response.status_code == 200, response.json()
 
