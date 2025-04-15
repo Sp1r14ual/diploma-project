@@ -1,4 +1,4 @@
-from app.bitrix.get_catalog_product import get_catalog_product_by_id
+from app.bitrix.get_catalog_product import get_catalog_product_by_id, get_catalog_product_list
 from fastapi import APIRouter
 
 router = APIRouter(
@@ -12,3 +12,8 @@ router = APIRouter(
 @router.get("/get")
 async def bitrix_get_catalog_product():
     return await get_catalog_product_by_id()
+
+
+@router.get("/list")
+async def bitrix_catalog_product_list():
+    return await get_catalog_product_list()
