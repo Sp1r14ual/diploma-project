@@ -18,3 +18,11 @@ class ContactSchema(BaseModel):
     inn: str | None = None
     ogrn: str | None = None
     snils: str | None = None
+
+
+class UpdateContactSchema(ContactSchema):
+    id: int
+
+
+class DeleteContactSchema(BaseModel):
+    id: int
