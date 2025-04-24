@@ -23,10 +23,11 @@ class Settings(BaseSettings):
     DADATA_TOKEN: str = os.getenv("DADATA_TOKEN") or ""
     DADATA_SECRET: str = os.getenv("DADATA_SECRET") or ""
 
-    ENGINE: ClassVar[Engine] = create_engine(
-        'mssql+pyodbc://DESKTOP-OE5G1EA\\SQLEXPRESS/ggs_stud?driver=SQL+Server+Native+Client+11.0', echo=True)
+    DB_ENGINE_STRING: str = os.getenv("DB_ENGINE_STRING") or ""
 
-    BITRIX_WEBHOOK: str = os.getenv("BITRIX_WEBHOOK")
+    ENGINE: ClassVar[Engine] = create_engine(DB_ENGINE_STRING, echo=True)
+
+    BITRIX_WEBHOOK: str = os.getenv("BITRIX_WEBHOOK") or ""
 
     BITRIX: ClassVar[Bitrix] = Bitrix(BITRIX_WEBHOOK)
 
