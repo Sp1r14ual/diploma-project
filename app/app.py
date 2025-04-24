@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from fast_bitrix24 import Bitrix
 from app.routes.bitrix_crm_contact import router as crm_contact_router
+from app.routes.bitrix_crm_company import router as crm_company_router
 from app.routes.bitrix_catalog_product import router as catalog_product_router
 from app.routes.db_person import router as person_router
 from app.routes.db_organization import router as organization_router
@@ -15,6 +16,7 @@ app = FastAPI()
 
 
 app.include_router(crm_contact_router)
+app.include_router(crm_company_router)
 app.include_router(catalog_product_router)
 app.include_router(person_router)
 app.include_router(organization_router)

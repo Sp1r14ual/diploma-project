@@ -7,8 +7,6 @@ router = APIRouter(
     tags=["Bitrix_CRM_Contact"]
 )
 
-# Сделать post с передачей параметров
-
 
 @router.post("/create", status_code=201)
 async def bitrix_create_contact(ContactSchema: ContactSchema):
@@ -24,8 +22,6 @@ async def bitrix_create_contact(ContactSchema: ContactSchema):
 
     add_crm_contact(params=params)
     return "OK"
-
-# сделать фильтрацию по параметрам через post метод
 
 
 @router.put("/update", status_code=200)
