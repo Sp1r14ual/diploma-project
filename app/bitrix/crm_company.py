@@ -5,14 +5,12 @@ from app.settings import settings
 #     return await settings.BITRIX.call('crm.company.fields', {})
 
 def get_crm_company(id: int = 1):
-    return settings.BITRIX.call('crm.company.get', {"id": id})
+    return settings.BITRIX.call('crm.company.get', {"ID": id})
 
 
 def list_crm_companies(
-        select_params=["ID", "TITLE", "CURRENCY_ID", "REVENUE"],
-        filter_params={
-            "TITLE": "ИП Тестов"
-        }):
+        select_params=["ID", "TITLE"],
+        filter_params={}):
     return settings.BITRIX.call('crm.company.list',
                                 {'select': select_params,
                                  'filter': filter_params})
