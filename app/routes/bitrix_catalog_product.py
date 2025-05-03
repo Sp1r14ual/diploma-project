@@ -9,7 +9,7 @@ router = APIRouter(
 )
 
 
-@router.post("/create")
+@router.post("/create", status_code=201)
 async def bitrix_add_product(AddProductSchema: AddProductSchema):
     params = {
         "iblockId": settings.iblockID,
@@ -23,7 +23,7 @@ async def bitrix_add_product(AddProductSchema: AddProductSchema):
     return "OK"
 
 
-@router.put("/update")
+@router.put("/update", status_code=200)
 async def bitrix_update_product(EditProductSchema: EditProductSchema):
     params = {
         "name": EditProductSchema.name,
@@ -36,18 +36,18 @@ async def bitrix_update_product(EditProductSchema: EditProductSchema):
     return "OK"
 
 
-@router.delete("/delete")
+@router.delete("/delete", status_code=200)
 async def bitrix_delete_product(DeleteProductSchema: DeleteProductSchema):
     delete_catalog_product(id=DeleteProductSchema.id)
     return "OK"
 
 
-@router.post("/get")
+@router.post("/get", status_code=200)
 async def bitrix_get_catalog_product(GetProductSchema: GetProductSchema):
     return await get_catalog_product_by_id(id=GetProductSchema.id)
 
 
-@router.post("/list")
+@router.post("/list", status_code=200)
 async def bitrix_catalog_product_list(ListProductSchema: ListProductSchema):
     params = {
         "iblockId": settings.iblockID,
@@ -59,6 +59,6 @@ async def bitrix_catalog_product_list(ListProductSchema: ListProductSchema):
     return await get_catalog_product_list(filter_params=params)
 
 
-@router.get("/infoblocks/list")
+@router.get("/infoblocks/list", status_code=200)
 async def bitrix_get_infoblocks_list():
     return await get_infoblocks_list()
