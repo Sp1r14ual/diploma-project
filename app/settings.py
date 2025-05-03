@@ -31,5 +31,7 @@ class Settings(BaseSettings):
 
     BITRIX: ClassVar[Bitrix] = Bitrix(BITRIX_WEBHOOK)
 
+    iblockID: int = 15
+
 
 settings = Settings()
