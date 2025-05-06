@@ -31,6 +31,8 @@ class Settings(BaseSettings):
 
     BITRIX: ClassVar[Bitrix] = Bitrix(BITRIX_WEBHOOK)
 
+    GETGEO_API_KEY: str = os.getenv("GETGEO_API_KEY") or ""
+
     iblockID: int = 15
 
 
