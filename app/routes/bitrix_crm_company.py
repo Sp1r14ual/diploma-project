@@ -1,7 +1,9 @@
 from app.bitrix.crm_company import add_crm_company, get_crm_company, list_crm_companies, update_crm_company, delete_crm_company
 from app.bitrix.crm_requisite import add_crm_requisite, update_crm_requisite, delete_crm_requisite, get_crm_requisite, list_crm_requisite
 from app.schemas.company_schema import CompanySchema, UpdateCompanySchema, DeleteCompanySchema, GetCompanySchema, ListCompanySchema
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from fastapi_jwt_auth import AuthJWT
+from app.settings import settings
 import time
 
 router = APIRouter(
@@ -11,7 +13,9 @@ router = APIRouter(
 
 
 @router.post("/create", status_code=201)
-async def bitrix_create_company(CompanySchema: CompanySchema):
+async def bitrix_create_company(CompanySchema: CompanySchema, Authorize: AuthJWT = Depends()):
+    if settings.ENABLE_SECURITY:
+        Authorize.jwt_required()
 
     company_params = {
         "TITLE": CompanySchema.name,
@@ -58,7 +62,10 @@ async def bitrix_create_company(CompanySchema: CompanySchema):
 
 
 @router.post("/get", status_code=200)
-async def bitrix_get_company(GetCompanySchema: GetCompanySchema):
+async def bitrix_get_company(GetCompanySchema: GetCompanySchema, Authorize: AuthJWT = Depends()):
+    if settings.ENABLE_SECURITY:
+        Authorize.jwt_required()
+
     company_id = GetCompanySchema.id
     company_awaited = await get_crm_company(id=company_id)
     company = company_awaited["order0000000000"]
@@ -100,7 +107,10 @@ async def bitrix_get_company(GetCompanySchema: GetCompanySchema):
 
 
 @router.post("/list", status_code=200)
-async def bitrix_list_companies(ListCompanySchema: ListCompanySchema):
+async def bitrix_list_companies(ListCompanySchema: ListCompanySchema, Authorize: AuthJWT = Depends()):
+    if settings.ENABLE_SECURITY:
+        Authorize.jwt_required()
+
     company_params = {
         "TITLE": ListCompanySchema.name,
         # "ADDRESS_LEGAL": CompanySchema.adress_jur,
@@ -113,7 +123,10 @@ async def bitrix_list_companies(ListCompanySchema: ListCompanySchema):
 
 
 @router.put("/update", status_code=200)
-async def bitrix_update_company(UpdateCompanySchema: UpdateCompanySchema):
+async def bitrix_update_company(UpdateCompanySchema: UpdateCompanySchema, Authorize: AuthJWT = Depends()):
+    if settings.ENABLE_SECURITY:
+        Authorize.jwt_required()
+
     compamy_params = {
         "TITLE": UpdateCompanySchema.name,
         "ADDRESS_LEGAL": UpdateCompanySchema.adress_jur,
@@ -140,7 +153,10 @@ async def bitrix_update_company(UpdateCompanySchema: UpdateCompanySchema):
 
 
 @router.delete("/delete", status_code=200)
-async def bitrix_delete_company(DeleteCompanySchema: DeleteCompanySchema):
+async def bitrix_delete_company(DeleteCompanySchema: DeleteCompanySchema, Authorize: AuthJWT = Depends()):
+    if settings.ENABLE_SECURITY:
+        Authorize.jwt_required()
+
     company_awaited = await list_crm_companies(
         filter_params={"ID": DeleteCompanySchema.id})
 

@@ -1,6 +1,8 @@
 from app.bitrix.crm_contact import add_crm_contact, get_crm_contacts, update_crm_contact, delete_crm_contact
 from app.schemas.contact_schema import ContactSchema, UpdateContactSchema, DeleteContactSchema
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from fastapi_jwt_auth import AuthJWT
+from app.settings import settings
 
 router = APIRouter(
     prefix="/bitrix/contact",
@@ -9,7 +11,10 @@ router = APIRouter(
 
 
 @router.post("/create", status_code=201)
-async def bitrix_create_contact(ContactSchema: ContactSchema):
+async def bitrix_create_contact(ContactSchema: ContactSchema, Authorize: AuthJWT = Depends()):
+    if settings.ENABLE_SECURITY:
+        Authorize.jwt_required()
+
     params = {
         "LAST_NAME": ContactSchema.family_name,
         "NAME": ContactSchema.name,
@@ -25,7 +30,10 @@ async def bitrix_create_contact(ContactSchema: ContactSchema):
 
 
 @router.put("/update", status_code=200)
-async def bitrix_update_contact(UpdateContactSchema: UpdateContactSchema):
+async def bitrix_update_contact(UpdateContactSchema: UpdateContactSchema, Authorize: AuthJWT = Depends()):
+    if settings.ENABLE_SECURITY:
+        Authorize.jwt_required()
+
     params = {
         "LAST_NAME": UpdateContactSchema.family_name,
         "NAME": UpdateContactSchema.name,
@@ -42,7 +50,9 @@ async def bitrix_update_contact(UpdateContactSchema: UpdateContactSchema):
 
 
 @router.delete("/delete", status_code=200)
-async def bitrix_delete_contact(DeleteContactSchema: DeleteContactSchema):
+async def bitrix_delete_contact(DeleteContactSchema: DeleteContactSchema, Authorize: AuthJWT = Depends()):
+    if settings.ENABLE_SECURITY:
+        Authorize.jwt_required()
 
     delete_crm_contact(id=DeleteContactSchema.id)
 
@@ -50,7 +60,10 @@ async def bitrix_delete_contact(DeleteContactSchema: DeleteContactSchema):
 
 
 @router.post("/get", status_code=200)
-async def bitrix_get_contacts(ContactSchema: ContactSchema):
+async def bitrix_get_contacts(ContactSchema: ContactSchema, Authorize: AuthJWT = Depends()):
+    if settings.ENABLE_SECURITY:
+        Authorize.jwt_required()
+        
     received = {
         "LAST_NAME": ContactSchema.family_name,
         "NAME": ContactSchema.name,

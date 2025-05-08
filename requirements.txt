@@ -9,3 +9,4 @@ requests
 loguru
 pydantic
 pydantic-settings
+git+https://github.com/vvpreo/fastapi-jwt-auth.git

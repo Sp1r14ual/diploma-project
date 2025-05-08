@@ -1,6 +1,7 @@
 from app.bitrix.catalog_product import get_catalog_product_by_id, get_catalog_product_list, get_infoblocks_list, add_catalog_product, update_catalog_product, delete_catalog_product
 from app.schemas.product_schema import AddProductSchema, EditProductSchema, DeleteProductSchema, ListProductSchema, GetProductSchema
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from fastapi_jwt_auth import AuthJWT
 from app.settings import settings
 
 router = APIRouter(
@@ -10,7 +11,10 @@ router = APIRouter(
 
 
 @router.post("/create", status_code=201)
-async def bitrix_add_product(AddProductSchema: AddProductSchema):
+async def bitrix_add_product(AddProductSchema: AddProductSchema, Authorize: AuthJWT = Depends()):
+    if settings.ENABLE_SECURITY:
+        Authorize.jwt_required()
+
     params = {
         "iblockId": settings.iblockID,
         "name": AddProductSchema.name,
@@ -24,12 +28,14 @@ async def bitrix_add_product(AddProductSchema: AddProductSchema):
 
 
 @router.put("/update", status_code=200)
-async def bitrix_update_product(EditProductSchema: EditProductSchema):
+async def bitrix_update_product(EditProductSchema: EditProductSchema, Authorize: AuthJWT = Depends()):
+    if settings.ENABLE_SECURITY:
+        Authorize.jwt_required()
+
     params = {
         "name": EditProductSchema.name,
         "dateCreate": EditProductSchema.year_produce,
         "previewText": EditProductSchema.remark
-
     }
 
     update_catalog_product(id=EditProductSchema.id, params=params)
@@ -37,18 +43,27 @@ async def bitrix_update_product(EditProductSchema: EditProductSchema):
 
 
 @router.delete("/delete", status_code=200)
-async def bitrix_delete_product(DeleteProductSchema: DeleteProductSchema):
+async def bitrix_delete_product(DeleteProductSchema: DeleteProductSchema, Authorize: AuthJWT = Depends()):
+    if settings.ENABLE_SECURITY:
+        Authorize.jwt_required()
+
     delete_catalog_product(id=DeleteProductSchema.id)
     return "OK"
 
 
 @router.post("/get", status_code=200)
-async def bitrix_get_catalog_product(GetProductSchema: GetProductSchema):
+async def bitrix_get_catalog_product(GetProductSchema: GetProductSchema, Authorize: AuthJWT = Depends()):
+    if settings.ENABLE_SECURITY:
+        Authorize.jwt_required()
+
     return await get_catalog_product_by_id(id=GetProductSchema.id)
 
 
 @router.post("/list", status_code=200)
-async def bitrix_catalog_product_list(ListProductSchema: ListProductSchema):
+async def bitrix_catalog_product_list(ListProductSchema: ListProductSchema, Authorize: AuthJWT = Depends()):
+    if settings.ENABLE_SECURITY:
+        Authorize.jwt_required()
+
     params = {
         "iblockId": settings.iblockID,
         "name": ListProductSchema.name,
@@ -60,5 +75,8 @@ async def bitrix_catalog_product_list(ListProductSchema: ListProductSchema):
 
 
 @router.get("/infoblocks/list", status_code=200)
-async def bitrix_get_infoblocks_list():
+async def bitrix_get_infoblocks_list(Authorize: AuthJWT = Depends()):
+    if settings.ENABLE_SECURITY:
+        Authorize.jwt_required()
+
     return await get_infoblocks_list()

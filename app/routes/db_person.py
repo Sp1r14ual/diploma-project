@@ -3,8 +3,10 @@ from app.db.person.person_update import update_in_Person
 from app.db.person.person_delete import delete_from_Person
 from app.db.person.get_all_people import select_all_from_person
 from app.schemas.person_schema import AddPersonSchema, EditPersonSchema, DeletePersonSchema
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
+from fastapi_jwt_auth import AuthJWT
 from app.logger import logger
+from app.settings import settings
 
 
 router = APIRouter(
@@ -14,7 +16,9 @@ router = APIRouter(
 
 
 @router.post("/insert", status_code=201)
-async def db_create_person(AddPersonSchema: AddPersonSchema):
+async def db_create_person(AddPersonSchema: AddPersonSchema, Authorize: AuthJWT = Depends()):
+    if settings.ENABLE_SECURITY:
+        Authorize.jwt_required()
 
     id = insert_in_Person(**AddPersonSchema.dict())
 
@@ -24,7 +28,10 @@ async def db_create_person(AddPersonSchema: AddPersonSchema):
 
 
 @router.put("/update", status_code=200)
-async def db_update_person(EditPersonSchema: EditPersonSchema):
+async def db_update_person(EditPersonSchema: EditPersonSchema, Authorize: AuthJWT = Depends()):
+    if settings.ENABLE_SECURITY:
+        Authorize.jwt_required()
+
     result = update_in_Person(**EditPersonSchema.dict())
     if isinstance(result, str) and result.startswith("Error"):
         logger.error(f"Update In Person: {result}")
@@ -36,7 +43,10 @@ async def db_update_person(EditPersonSchema: EditPersonSchema):
 
 
 @router.delete("/delete", status_code=200)
-async def db_delete_person(DeletePersonSchema: DeletePersonSchema):
+async def db_delete_person(DeletePersonSchema: DeletePersonSchema, Authorize: AuthJWT = Depends()):
+    if settings.ENABLE_SECURITY:
+        Authorize.jwt_required()
+
     result = delete_from_Person(**DeletePersonSchema.dict())
     if isinstance(result, str) and result.startswith("Error"):
         logger.error(f"Delete From Person: {result}")
@@ -48,7 +58,10 @@ async def db_delete_person(DeletePersonSchema: DeletePersonSchema):
 
 
 @router.get("/get_all_people", status_code=200)
-async def db_get_all_people():
+async def db_get_all_people(Authorize: AuthJWT = Depends()):
+    if settings.ENABLE_SECURITY:
+        Authorize.jwt_required()
+
     result = select_all_from_person()
 
     if isinstance(result, str) and result.startswith("Error"):

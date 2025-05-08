@@ -1,4 +1,5 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
+from fastapi_jwt_auth import AuthJWT
 from app.logger import logger
 from dadata import Dadata
 from app.settings import settings
@@ -25,7 +26,10 @@ def check_none(data):
 
 
 @router.post("/insert/for_person", status_code=201)
-async def db_create_house_for_person(AddHouseSchemaForPerson: AddHouseSchemaForPerson) -> dict:
+async def db_create_house_for_person(AddHouseSchemaForPerson: AddHouseSchemaForPerson, Authorize: AuthJWT = Depends()) -> dict:
+    if settings.ENABLE_SECURITY:
+        Authorize.jwt_required()
+
     global parsed_data
     parsed_data = dict()
 
@@ -61,7 +65,10 @@ async def db_create_house_for_person(AddHouseSchemaForPerson: AddHouseSchemaForP
 
 
 @router.post("/insert/for_organization", status_code=201)
-async def db_create_house_for_organization(AddHouseSchemaForOrganization: AddHouseSchemaForOrganization) -> dict:
+async def db_create_house_for_organization(AddHouseSchemaForOrganization: AddHouseSchemaForOrganization, Authorize: AuthJWT = Depends()) -> dict:
+    if settings.ENABLE_SECURITY:
+        Authorize.jwt_required()
+
     global parsed_data
     parsed_data = dict()
 
@@ -97,7 +104,10 @@ async def db_create_house_for_organization(AddHouseSchemaForOrganization: AddHou
 
 
 @router.put("/update/for_person", status_code=200)
-async def db_update_house_for_person(EditHouseSchemaForPerson: EditHouseSchemaForPerson) -> dict:
+async def db_update_house_for_person(EditHouseSchemaForPerson: EditHouseSchemaForPerson, Authorize: AuthJWT = Depends()) -> dict:
+    if settings.ENABLE_SECURITY:
+        Authorize.jwt_required()
+
     global parsed_data
     parsed_data = dict()
 
@@ -130,7 +140,10 @@ async def db_update_house_for_person(EditHouseSchemaForPerson: EditHouseSchemaFo
 
 
 @router.put("/update/for_organization", status_code=200)
-async def db_update_house_for_organization(EditHouseSchemaForOrganization: EditHouseSchemaForOrganization) -> dict:
+async def db_update_house_for_organization(EditHouseSchemaForOrganization: EditHouseSchemaForOrganization, Authorize: AuthJWT = Depends()) -> dict:
+    if settings.ENABLE_SECURITY:
+        Authorize.jwt_required()
+
     global parsed_data
     parsed_data = dict()
 
@@ -164,7 +177,10 @@ async def db_update_house_for_organization(EditHouseSchemaForOrganization: EditH
 
 
 @router.delete("/delete", status_code=200)
-async def db_delete_house(DeleteHouseSchema: DeleteHouseSchema) -> dict:
+async def db_delete_house(DeleteHouseSchema: DeleteHouseSchema, Authorize: AuthJWT = Depends()) -> dict:
+    if settings.ENABLE_SECURITY:
+        Authorize.jwt_required()
+
     result = delete_from_House(**DeleteHouseSchema.dict())
 
     if isinstance(result, str) and result.startswith("Error"):
@@ -189,10 +205,16 @@ def process_get_all_houses(data):
 
 
 @router.post("/get_all_houses/for_person", status_code=200)
-async def db_get_all_houses_by_id_for_person(GetAllHousesSchemaForPerson: GetAllHousesSchemaForPerson):
+async def db_get_all_houses_by_id_for_person(GetAllHousesSchemaForPerson: GetAllHousesSchemaForPerson, Authorize: AuthJWT = Depends()):
+    if settings.ENABLE_SECURITY:
+        Authorize.jwt_required()
+
     return process_get_all_houses(GetAllHousesSchemaForPerson.dict())
 
 
 @router.post("/get_all_houses/for_organization", status_code=200)
-async def db_get_all_houses_by_id_for_organization(GetAllHousesSchemaForOrganization: GetAllHousesSchemaForOrganization):
+async def db_get_all_houses_by_id_for_organization(GetAllHousesSchemaForOrganization: GetAllHousesSchemaForOrganization, Authorize: AuthJWT = Depends()):
+    if settings.ENABLE_SECURITY:
+        Authorize.jwt_required()
+
     return process_get_all_houses(GetAllHousesSchemaForOrganization.dict())

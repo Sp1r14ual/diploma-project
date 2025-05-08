@@ -3,6 +3,7 @@ from typing import Optional
 from difflib import SequenceMatcher
 import requests
 from app.settings import settings
+from fastapi import HTTPException
 
 
 class OrganizationData(BaseModel):
@@ -29,6 +30,12 @@ class OrganizationData(BaseModel):
 
     @field_validator('inn')
     def validate_inn(cls, v: str) -> str:
+
+        # Костыль
+        # Не ясно, почему игнорируется флаг ENABLE_SECURITY на уровне эндпоинта
+        if settings.ENABLE_SECURITY:
+            raise HTTPException(status_code=401, detail="Unauthorized")
+
         if len(v) not in (10, 12) or not v.isdigit():
             raise ValueError("ИНН должен содержать 10 или 12 цифр")
 
