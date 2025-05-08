@@ -1,5 +1,6 @@
 import requests
 import pytest
+from app.settings import settings
 
 VALID_DATA = {
     "family_name": "Иванов",
@@ -35,7 +36,7 @@ def test_valid_person():
     response = requests.post(URL + '/person', json=VALID_DATA)
 
     assert response.status_code == 200
-    assert "Данные пользователя валидны" in response.json().values()
+    assert "Данные физ.лица валидны" in response.json().values()
 
 
 @pytest.mark.skipif(not (IS_ACTIVE and settings.GETGEO_API_KEY), reason="prevent using getgeo api")
