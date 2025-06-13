@@ -39,7 +39,13 @@ class PersonData(BaseModel):
             "parts": ["SURNAME"]
         }
         response = requests.post('https://api.gigdata.ru/api/v2/suggest/fio',
-                                 json=post_data, headers={'Authorization': settings.GETGEO_API_KEY}).json()
+                                 json=post_data, headers={'Authorization': settings.GETGEO_API_KEY})
+
+
+        if response.status_code == 422:
+            raise ValueError('Фамилия не найдена')
+        
+        response = response.json()
 
         for suggestion in response["suggestions"]:
             if suggestion["value"].lower() == v.lower():
@@ -55,7 +61,12 @@ class PersonData(BaseModel):
             "parts": ["NAME"]
         }
         response = requests.post('https://api.gigdata.ru/api/v2/suggest/fio',
-                                 json=post_data, headers={'Authorization': settings.GETGEO_API_KEY}).json()
+                                 json=post_data, headers={'Authorization': settings.GETGEO_API_KEY})
+
+        if response.status_code == 422:
+            raise ValueError('Имя не найдено')
+
+        response = response.json()
 
         for suggestion in response["suggestions"]:
             if suggestion["value"].lower() == v.lower():
@@ -71,7 +82,12 @@ class PersonData(BaseModel):
             "parts": ["PATRONYMIC"]
         }
         response = requests.post('https://api.gigdata.ru/api/v2/suggest/fio',
-                                 json=post_data, headers={'Authorization': settings.GETGEO_API_KEY}).json()
+                                 json=post_data, headers={'Authorization': settings.GETGEO_API_KEY})
+
+        if response.status_code == 422:
+            raise ValueError('Отчество не найдено')
+
+        response = response.json()
 
         for suggestion in response["suggestions"]:
             if suggestion["value"].lower() == v.lower():

@@ -8,7 +8,7 @@ VALID_DATA = {
     "patronimic_name": "Иванович",
     "phone_number": "+79161234567",
     "email": "ivan.ivanov@gmail.com",
-    "inn": "0000000000",
+    "inn": "000000000000",
     "birth_date": "20.01.2001",
     "ogrn": "1027700132195",
     "snils": "11223344595"
